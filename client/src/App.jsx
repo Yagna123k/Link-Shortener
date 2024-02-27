@@ -26,9 +26,9 @@ const App = () => {
 
   const shortenURL = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/shorten', { originalURL }, { withCredentials: true });
+      const response = await axios.post('https://shortlink346.vercel.app/shorten', { originalURL }, { withCredentials: true });
       console.log(response);
-      setShortURL(`http://localhost:5000/${response.data.shortURLCode}`);
+      setShortURL(`https://shortlink346.vercel.app/${response.data.shortURLCode}`);
       setShortURLCode(response.data.shortURLCode);
       setClickCount(response.data.clicks);
     } catch (error) {
@@ -37,14 +37,14 @@ const App = () => {
   };
 
 
-  const handleShortUrlClick = async () => {
-    try {
-      // await axios.get(`http://localhost:5000/${shortURLCode}`, { withCredentials: true, });
-      setClickCount((prevCount) => prevCount + 1);
-    } catch (error) {
-      console.error('Error redirecting to URL:', error.message); // Extract error message
-    }
-  };
+  // const handleShortUrlClick = async () => {
+  //   try {
+  //     // await axios.get(`http://localhost:5000/${shortURLCode}`, { withCredentials: true, });
+  //     setClickCount((prevCount) => prevCount + 1);
+  //   } catch (error) {
+  //     console.error('Error redirecting to URL:', error.message); // Extract error message
+  //   }
+  // };
 
 
   return (
@@ -86,9 +86,7 @@ const App = () => {
               {shortURL}
               <ExternalLinkIcon mx='2px' />
             </Link>}
-
-            {clickCount != 0 && <Text>Click Count: {clickCount}</Text>}
-
+            {/* {clickCount != 0 && <Text>Click Count: {clickCount}</Text>} */}
           </VStack>
         </Box>
       </Stack>
