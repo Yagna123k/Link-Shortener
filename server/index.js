@@ -4,10 +4,18 @@ const bodyParser = require("body-parser")
 const app = express()
 const cors = require('cors')
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(cors({
+    origin: 'http://localhost:5173', // Specify the exact origin
+    methods: 'GET, POST, PUT, DELETE',
+    allowedHeaders: 'Content-Type',
+    credentials: true,
+}));
 
-app.use(cors({ credentials: true, origin: 'http://localhost:5173' }));
+app.use(express.json())
+
+// app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.json());
+// app.use(cors())
 
 
 const URLCode = require("./URLCode")
@@ -31,8 +39,10 @@ app.post('/shorten', async (req, res) => {
 
 app.get("/:shortURLCode", async (req, res) => {
     const { shortURLCode } = req.params
+    // console.log("shortURLCode: ", shortURLCode);
 
     const url = await URLs.findOne({ shortURLCode });
+    // console.log("url: ", url);
 
     if (!url) {
         return res.status(404).json({ error: 'URL not found' });
@@ -40,8 +50,9 @@ app.get("/:shortURLCode", async (req, res) => {
 
     url.clicks++;
     await url.save();
-
+    console.log(url.originalURL);
     res.redirect(url.originalURL)
+
 })
 
 const PORT = process.env.PORT || 5000;

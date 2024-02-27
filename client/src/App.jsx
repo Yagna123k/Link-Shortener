@@ -26,24 +26,26 @@ const App = () => {
 
   const shortenURL = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/shorten', { originalURL }, { withCredentials: true })
-      console.log(response)
-      setShortURL(`${window.location.origin}/${response.data.shortURLCode}`);
-      setShortURLCode(response.data.shortURLCode)
+      const response = await axios.post('http://localhost:5000/shorten', { originalURL }, { withCredentials: true });
+      console.log(response);
+      setShortURL(`http://localhost:5000/${response.data.shortURLCode}`);
+      setShortURLCode(response.data.shortURLCode);
       setClickCount(response.data.clicks);
     } catch (error) {
-      console.error('Error shortening URL:', error);
+      console.error('Error shortening URL:', error.message); // Extract error message
     }
-  }
+  };
+
 
   const handleShortUrlClick = async () => {
     try {
-      await axios.get(`http://localhost:5000/${shortURLCode}`,{ withCredentials: true });
+      // await axios.get(`http://localhost:5000/${shortURLCode}`, { withCredentials: true, });
       setClickCount((prevCount) => prevCount + 1);
     } catch (error) {
-      console.error('Error redirecting to URL:', error);
+      console.error('Error redirecting to URL:', error.message); // Extract error message
     }
   };
+
 
   return (
     <Container maxW="5xl" p={{ base: 5, md: 10 }}>
@@ -74,18 +76,19 @@ const App = () => {
           >
             <FormControl>
               <FormLabel>Your Long URL</FormLabel>
-              <Input type="text" placeholder="Paste here" rounded="md" onChange={(e)=>{setOriginalURL(e.target.value)}} />
+              <Input type="text" placeholder="Paste here" rounded="md" onChange={(e) => { setOriginalURL(e.target.value) }} />
             </FormControl>
             <Button bg="blue.400" color="white" _hover={{ bg: 'blue.500' }} rounded="md" w="100%" onClick={shortenURL}>
               Make magic link
             </Button>
 
-            {shortURL && <Link href={shortURL} isExternal onClick={handleShortUrlClick}>
-              {shortURL} <ExternalLinkIcon mx='2px' />
+            {shortURL && <Link href={shortURL} isExternal >
+              {shortURL}
+              <ExternalLinkIcon mx='2px' />
             </Link>}
-            
-            {clickCount!=0 && <Text>Click Count: {clickCount}</Text>}
-            
+
+            {clickCount != 0 && <Text>Click Count: {clickCount}</Text>}
+
           </VStack>
         </Box>
       </Stack>
