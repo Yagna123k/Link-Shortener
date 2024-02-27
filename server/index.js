@@ -5,7 +5,7 @@ const app = express()
 const cors = require('cors')
 
 app.use(cors({
-    origin: 'http://localhost:5173', // Specify the exact origin
+    origin: 'https://genshortlink.vercel.app/', // Specify the exact origin
     methods: 'GET, POST, PUT, DELETE',
     allowedHeaders: 'Content-Type',
     credentials: true,
