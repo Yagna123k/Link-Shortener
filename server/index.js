@@ -53,11 +53,12 @@ app.get("/:shortURLCode", async (req, res) => {
     console.log(url.originalURL);
     res.redirect(url.originalURL)
 
-    res.send("Welcome")
 
 })
 
-
+app.get("/",(req,res)=>{
+    res.send("Welcome")
+})
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
