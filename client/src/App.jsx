@@ -26,9 +26,9 @@ const App = () => {
 
   const shortenURL = async () => {
     try {
-      const response = await axios.post('https://shortlink346.vercel.app/shorten', { originalURL }, { withCredentials: true });
+      const response = await axios.post('https://shortlink1.vercel.app/shorten', { originalURL }, { withCredentials: true });
       console.log(response);
-      setShortURL(`https://shortlink346.vercel.app/${response.data.shortURLCode}`);
+      setShortURL(`https://shortlink1.vercel.app/${response.data.shortURLCode}`);
       setShortURLCode(response.data.shortURLCode);
       setClickCount(response.data.clicks);
     } catch (error) {

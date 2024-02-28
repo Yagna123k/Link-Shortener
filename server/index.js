@@ -17,7 +17,6 @@ app.use(express.json())
 // app.use(bodyParser.json());
 // app.use(cors())
 
-
 const URLCode = require("./URLCode")
 const URLs = require("./DataBase/URLSchema")
 const connectMongoDB = require("./DataBase/ConnectMongoDB")
@@ -56,7 +55,7 @@ app.get("/:shortURLCode", async (req, res) => {
 
 })
 
-app.get("/",(req,res)=>{
+app.get("/", (req, res) => {
     res.send("Welcome")
 })
 const PORT = process.env.PORT || 5000;
