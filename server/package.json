@@ -8,9 +8,7 @@
   },
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js",
-    "build": "vite build",
-    "serve": "vite preview"
+    "dev": "nodemon index.js"
   },
   "repository": {
     "type": "git",
