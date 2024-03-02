@@ -5,17 +5,13 @@ const app = express()
 const cors = require('cors')
 
 app.use(cors({
-    origin: 'https://genshortlink.vercel.app', // Specify the exact origin
+    origin: ['https://genshortlink.vercel.app','http://localhost:5173'],
     methods: 'GET, POST, PUT, DELETE',
     allowedHeaders: 'Content-Type',
     credentials: true,
 }));
 
 app.use(express.json())
-
-// app.use(bodyParser.urlencoded({ extended: false }));
-// app.use(bodyParser.json());
-// app.use(cors())
 
 const URLCode = require("./URLCode")
 const URLs = require("./DataBase/URLSchema")
@@ -36,6 +32,27 @@ app.post('/shorten', async (req, res) => {
     res.json(url)
 })
 
+app.get("/", async (req, res) => {
+    try {
+        const allData = await URLs.find()
+        res.status(200).json(allData)
+    } catch (err) {
+        console.error('Error fetching data:', err);
+        res.status(500).json({ err: 'Internal Server Error' })
+    }
+})
+app.get("/get/:shortURLCode", async (req, res) => {
+    const { shortURLCode } = req.params
+
+    const url = await URLs.findOne({ shortURLCode });
+    // console.log("url: ", url);
+
+    if (!url) {
+        return res.status(404).json({ error: 'URL not found' });
+    }
+    res.json(url)
+})
+
 app.get("/:shortURLCode", async (req, res) => {
     const { shortURLCode } = req.params
     // console.log("shortURLCode: ", shortURLCode);
@@ -48,11 +65,8 @@ app.get("/:shortURLCode", async (req, res) => {
     }
 
     url.clicks++;
-    await url.save();
-    console.log(url.originalURL);
+    await url.save()
     res.redirect(url.originalURL)
-
-
 })
 
 app.get("/", (req, res) => {
