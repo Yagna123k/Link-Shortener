@@ -1,7 +1,5 @@
 # Link-Shortener
 
-![Link-Shortener Logo](./client/public/Link-Shortener%20logo.jpg)
-
 Link-Shortener is a simple and efficient URL shortener that allows you to create short links for your long URLs. It also provides click tracking to monitor the number of clicks on each short link.
 
 ## Features
