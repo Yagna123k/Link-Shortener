@@ -41,22 +41,32 @@ const App = () => {
           { originalURL },
           { withCredentials: true }
         );
-        console.log(response.data);
         setShortURL(`https://slink1.vercel.app/${response.data.shortURLCode}`);
         setShortURLCode(response.data.shortURLCode);
+        const newData = {
+          shortURL: `https://slink1.vercel.app/${response.data.shortURLCode}`,
+          originalURL: originalURL,
+          clicks: 0,
+        };
+        const existingData = JSON.parse(localStorage.getItem("Data")) || [];
+        localStorage.setItem(
+          "Data",
+          JSON.stringify([newData, ...existingData])
+        );
       }
     } catch (error) {
       console.error("Error shortening URL:", error.message);
     }
   };
 
-  const getAllData = async () => {
+  const getAllData = () => {
     try {
-      const response = await axios.get("https://slink1.vercel.app/");
-      setData(response.data);
+      const data = JSON.parse(localStorage.getItem("Data")) || [];
+      setData(data);
+      console.log(Data)
       console.log("Data Fetched Successfully");
     } catch (error) {
-      console.error("Error in getting data:", error.message);
+      console.error("Error in getting data:", error);
     }
   };
 
@@ -65,7 +75,20 @@ const App = () => {
       const response = await axios.get(
         `https://slink1.vercel.app/get/${shortURLCode}`
       );
-      setClicks(response.data.clicks);
+      const newClicks = response.data.clicks;
+      
+      const existingData = JSON.parse(localStorage.getItem("Data")) || [];
+      const updatedData = existingData.map((item) => {
+        if (item.shortURL === `https://slink1.vercel.app/${response.data.shortURLCode}`) {
+          console.log(newClicks)
+          return { ...item, clicks: newClicks };
+        }
+        return item;
+      });
+
+      localStorage.setItem("Data", JSON.stringify(updatedData));
+      setClicks(newClicks);
+
       console.log("Clicks Updated");
     } catch (error) {
       console.error("Error in getting data:", error.message);
@@ -160,7 +183,6 @@ const App = () => {
                   <Text fontWeight="bold">Clicks: {clicks}</Text>
                 </Box>
               )}
-              {/* {clickCount != 0 && <Text>Click Count: {clickCount}</Text>} */}
             </VStack>
           </Box>
         </Stack>
@@ -176,13 +198,13 @@ const App = () => {
           </Tr>
         </Thead>
         <Tbody>
-          {Data.reverse().map((item, id) => {
+          {Data.length !== 0 && Data.map((item, id) => {
+            const originalURLSubstring = item.originalURL?.substr(8, 50) || "";
             return (
               <Tr key={id}>
                 <Td>
                   <Link href={item.originalURL} isExternal>
-                    {" "}
-                    {item.originalURL.substr(8, 50)}{" "}
+                    {originalURLSubstring}
                   </Link>
                 </Td>
                 <Td>
@@ -193,14 +215,10 @@ const App = () => {
                         getAllData();
                       }, 3000);
                     }}
-                    href={`https://slink1.vercel.app/${item.shortURLCode}`}
+                    href={item.shortURL}
                     isExternal
                   >
-                    {" "}
-                    https://slink1.vercel.app/{item.shortURLCode.substr(
-                      0,
-                      30
-                    )}{" "}
+                    {item.shortURL.substr(0, 30) || ""}
                   </Link>
                 </Td>
                 <Td isNumeric>{item.clicks}</Td>
