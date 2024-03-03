@@ -221,7 +221,7 @@ const App = () => {
                     {item.shortURL.substr(0, 30) || ""}
                   </Link>
                 </Td>
-                <Td isNumeric>{item.clicks}</Td>
+                <Td isNumeric>{item.clicks == 0 ? 0:item.clicks+1}</Td>
               </Tr>
             );
           })}
